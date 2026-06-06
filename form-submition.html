@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add User</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-black min-h-screen p-10">
+
+    <!-- Form -->
+    <form id="form" class="bg-[#2a2a2a] max-w-xl mx-auto rounded-2xl p-8 mb-5">
+        <h2 class="text-white text-2xl font-bold text-center mb-6">Add User</h2>
+
+        <div class="mb-2">
+            <label class="text-white mb-1 block">Name</label>
+            <input id="name" type="text" class="w-full bg-[#3a3a3a] text-white rounded-lg p-2 outline-none" />
+        </div>
+
+        <div class="mb-2">
+            <label class="text-white mb-1 block">Role</label>
+            <input id="role" type="text" class="w-full bg-[#3a3a3a] text-white rounded-lg p-2 outline-none" />
+        </div>
+
+        <div class="mb-2">
+            <label class="text-white mb-1 block">Bio</label>
+            <textarea id="bio" rows="2"
+                class="w-full bg-[#3a3a3a] text-white rounded-lg p-2 outline-none resize-none"></textarea>
+        </div>
+
+        <div class="mb-2">
+            <label class="text-white mb-1 block">Photo URL</label>
+            <input id="photo" type="text" class="w-full bg-[#3a3a3a] text-white rounded-lg p-2 outline-none" />
+        </div>
+
+        <button id="submit"
+            class=" submit w-full bg-[#3a3a3a] text-white font-semibold py-3  rounded-lg hover:bg-[#4a4a4a] transition">
+            Submit
+        </button>
+    </form>
+
+    <div id="cards" class="grid p-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+
+
+    </div>
+
+    <script>
+
+
+
+        let form = document.querySelector('form');
+        let username = document.querySelector('#name');
+        let role = document.querySelector('#role');
+        let bio = document.querySelector('#bio');
+        let photo = document.querySelector('#photo');
+
+
+
+
+        const UserManger = {
+            users: [],
+            init: function () {
+                form.addEventListener("submit", this.submitForm.bind(this));
+            },
+            submitForm: function (e) {
+                e.preventDefault();
+                this.addUsers();
+            },
+            addUsers: function () {
+                if (!username.value || !role.value || !bio.value || !photo.value) return alert('Please fill all fields!')
+
+                this.users.push({
+                    username: username.value,
+                    role: role.value,
+                    bio: bio.value,
+                    photo: photo.value,
+                })
+                form.reset();
+                this.renderUi();
+            },
+            renderUi: function () {
+                document.querySelector("#cards").innerHTML = "";
+                let self = this;
+                this.users.forEach(function (user, index) {
+
+                    const cards = document.querySelector('#cards');
+
+                    // Card
+                    const card = document.createElement('div');
+                    card.className = 'relative bg-[#2a2a2a] rounded-2xl p-6 flex flex-col items-center';
+
+                    // Image
+                    const img = document.createElement('img');
+                    img.className = 'w-20 h-20 rounded-full object-cover mb-4';
+                    img.src = user.photo;
+                    img.alt = 'User Photo';
+                    card.appendChild(img);
+
+                    // Name
+                    const name = document.createElement('h3');
+                    name.className = 'text-white text-xl font-bold mb-1';
+                    name.textContent = user.username;
+                    card.appendChild(name);
+
+                    // Role
+                    const role = document.createElement('p');
+                    role.className = 'text-gray-400 font-semibold text-sm mb-2';
+                    role.textContent = user.role;
+                    card.appendChild(role);
+
+                    // Bio
+                    const bio = document.createElement('p');
+                    bio.className = 'text-gray-400 text-sm text-center';
+                    bio.textContent = user.bio;
+                    card.appendChild(bio);
+
+
+                    // close card button
+                    const button = document.createElement('button');
+                    button.className = 'absolute top-3 right-3 font-semibold text-sm ';
+                    button.textContent = '❌';
+                    card.appendChild(button);
+
+
+                    // Append card to cards container
+                    document.querySelector("#cards").appendChild(card);
+
+                    button.addEventListener("click", function () {
+                        self.removeUser(index)
+                    })
+
+                });
+
+
+
+            },
+            removeUser: function (index) {
+                this.users.splice(index, 1);
+
+                this.renderUi();
+            },
+        };
+
+
+
+        UserManger.init();
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
